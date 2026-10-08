@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta name="theme-color" content="#090a0e">
+
+<title>PlateRush — Коллекция номеров</title>
+
+<style>
+
+:root {
+
+  --bg:#090a0e;
+
+  --panel:#13151c;
+
+  --line:#292c38;
+
+  --muted:#858b9c;
+
+  --green:#b9ff65;
+
+  --purple:#a58aff;
+
+}
+
+* {box-sizing:border-box}
+
+[hidden] {display:none!important}
+
+body {
+
+  margin:0;background:var(--bg);color:#f5f6fa;
+
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  min-height:100vh;
+
+}
+
+button {font:inherit;cursor:pointer}
+
+button:disabled {opacity:.6;cursor:wait}
+
+.app {
+
+  max-width:520px;margin:auto;min-height:100vh;
+
+  padding:env(safe-area-inset-top) 17px
+
+    calc(110px + env(safe-area-inset-bottom));
+
+}
+
+header {
+
+  display:flex;align-items:center;justify-content:space-between;
+
+  padding:22px 0 18px;gap:10px;
+
+}
+
+.brand {display:flex;align-items:center;gap:11px}
+
+.logo {
+
+  width:43px;height:43px;border-radius:14px;
+
+  display:grid;place-items:center;
+
+  background:linear-gradient(140deg,#c7ff81,#54a765);
+
+  color:#0a1009;font-size:22px;font-weight:950;
+
+  box-shadow:0 0 22px #b9ff6520;
+
+}
+
+h1 {font-size:19px;letter-spacing:1.7px;margin:0}
+
+.sub {font-size:9px;color:var(--muted);margin-top:5px;letter-spacing:.5px}
+
+.level {
+
+  flex-shrink:0;padding:10px;border:1px solid var(--line);
+
+  background:var(--panel);border-radius:12px;font-size:11px;
+
+}
+
+.stats {display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.stat {
+
+  background:linear-gradient(145deg,#171923,#111219);
+
+  border:1px solid var(--line);border-radius:16px;padding:15px;
+
+}
+
+.label {color:var(--muted);font-size:10px;letter-spacing:.6px}
+
+.value {font-size:21px;font-weight:800;margin-top:8px}
+
+.green {color:var(--green)}
+
+.section-head {
+
+  display:flex;justify-content:space-between;align-items:center;
+
+  margin:26px 0 13px;gap:10px;
+
+}
+
+h2 {font-size:16px;margin:0}
+
+.muted {font-size:10px;color:var(--muted)}
+
+.hero {
+
+  position:relative;overflow:hidden;
+
+  border:1px solid #34303f;border-radius:23px;
+
+  background:
+
+    radial-gradient(ellipse at 50% 30%,#332342 0%,transparent 58%),
+
+    linear-gradient(145deg,#191720,#101219 72%);
+
+  padding:22px 14px 18px;text-align:center;
+
+}
+
+.eyebrow {
+
+  position:relative;color:#c7b5ff;
+
+  font-size:10px;letter-spacing:2px;
+
+}
+
+.plate {
+
+  position:relative;display:flex;align-items:center;justify-content:center;
+
+  width:100%;max-width:370px;aspect-ratio:520 / 112;
+
+  margin:29px auto 20px;padding:0 38px;overflow:hidden;
+
+  border:1px solid #858d99;border-radius:7px;
+
+  background:linear-gradient(180deg,#fff 0%,#f4f5f6 18%,
+
+    #dce0e5 48%,#f7f8f9 76%,#c9ced5 100%);
+
+  box-shadow:inset 0 1px 1px #fff,inset 0 -2px 2px #a9afb8,
+
+    0 2px 0 #555c67,0 9px 22px #0008,0 0 24px #a77aff22;
+
+  color:#101319;transition:transform .2s;
+
+}
+
+.plate:before {
+
+  content:"";position:absolute;inset:4px;
+
+  border:1px solid #b8bec7;border-radius:3px;pointer-events:none;
+
+}
+
+.plate-number {
+
+  position:relative;left:-4px;z-index:1;white-space:nowrap;
+
+  font-size:clamp(27px,8vw,43px);font-weight:900;letter-spacing:1px;
+
+  line-height:1;color:#14171c;text-shadow:0 1px 0 #fff,0 -1px 0 #555;
+
+  transform:scaleX(.94);
+
+}
+
+.plate-region {
+
+  position:absolute;right:5px;top:5px;bottom:5px;width:47px;z-index:2;
+
+  border-left:1px solid #9da5b1;
+
+  display:flex;flex-direction:column;align-items:center;
+
+  justify-content:center;gap:2px;
+
+}
+
+.region-code {font-size:clamp(16px,4.5vw,22px);line-height:1;font-weight:900}
+
+.region-country {
+
+  font-size:9px;font-weight:800;line-height:1;
+
+  display:flex;align-items:center;gap:3px;
+
+}
+
+.rus-flag {
+
+  width:13px;height:9px;display:inline-block;
+
+  background:linear-gradient(to bottom,#fff 0 33.33%,
+
+    #2459a9 33.33% 66.66%,#d93643 66.66% 100%);
+
+  border:1px solid #aeb4bd;
+
+}
+
+.bolt {
+
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+
+  width:7px;height:7px;border-radius:50%;
+
+  background:radial-gradient(circle at 35% 30%,#fdfdfd,#7d8590 65%,#454b54);
+
+  border:1px solid #7a818b;box-shadow:inset 0 0 1px #fff;
+
+}
+
+.bolt-left {left:9px}
+
+.bolt-right {right:9px}
+
+.plate.spin {animation:shake .14s linear infinite}
+
+@keyframes shake {
+
+  0% {transform:translateY(0) rotate(0)}
+
+  50% {transform:translateY(-3px) rotate(.5deg)}
+
+  100% {transform:translateY(2px) rotate(-.5deg)}
+
+}
+
+.rarity {
+
+  display:inline-block;border:1px solid #66508c;color:#d6c4ff;
+
+  background:#9b7aff17;border-radius:30px;padding:7px 13px;
+
+  font-size:10px;letter-spacing:1px;font-weight:800;
+
+}
+
+.result {font-size:12px;color:#b8bdc9;margin:14px 0 18px;min-height:17px}
+
+.primary {
+
+  width:100%;border:0;border-radius:13px;padding:16px;
+
+  background:var(--green);color:#11150d;font-weight:900;
+
+  letter-spacing:1px;box-shadow:0 5px 24px #b9ff6517;
+
+}
+
+.primary:active {transform:scale(.985)}
+
+.hint {font-size:9px;color:#777e8e;margin-top:12px}
+
+.tabs {display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+
+.tab {
+
+  border:1px solid var(--line);background:var(--panel);
+
+  border-radius:12px;padding:13px 5px;color:#a6aabb;font-size:11px;
+
+}
+
+.tab.active {border-color:#8c75c9;background:#211b30;color:#fff}
+
+.plate-card {
+
+  display:flex;align-items:center;gap:13px;
+
+  background:var(--panel);border:1px solid var(--line);
+
+  padding:13px;border-radius:14px;margin-bottom:9px;
+
+}
+
+.mini-plate {
+
+  flex-shrink:0;width:122px;height:43px;border-radius:4px;
+
+  background:linear-gradient(#fff,#dce0e5,#f7f8f9);
+
+  border:1px solid #aab1bb;border-bottom:3px solid #aeb5c0;
+
+  color:#12151a;display:flex;align-items:center;justify-content:center;
+
+  font-size:14px;font-weight:900;letter-spacing:.2px;
+
+}
+
+.card-name {font-weight:750;font-size:12px}
+
+.card-detail {font-size:10px;color:var(--muted);margin-top:5px}
+
+.empty {
+
+  border:1px dashed #303340;border-radius:15px;
+
+  padding:27px 15px;text-align:center;color:var(--muted);font-size:12px;
+
+}
+
+.profile-card {
+
+  background:var(--panel);border:1px solid var(--line);
+
+  border-radius:16px;padding:18px;
+
+}
+
+.profile-avatar {
+
+  width:54px;height:54px;border-radius:17px;
+
+  background:#24202f;display:grid;place-items:center;font-size:25px;
+
+  margin-bottom:15px;
+
+}
+
+footer {
+
+  position:fixed;z-index:5;bottom:0;left:0;right:0;
+
+  background:#0b0c11ee;backdrop-filter:blur(18px);
+
+  border-top:1px solid var(--line);
+
+  padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+
+}
+
+.nav {max-width:500px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}
+
+.nav button {
+
+  border:0;background:transparent;color:#777e8e;
+
+  font-size:10px;padding:8px 1px;
+
+}
+
+.nav button span {display:block;font-size:20px;margin-bottom:5px}
+
+.nav button.active {color:var(--green)}
+
+.notice {font-size:10px;color:#777e8e;text-align:center;margin-top:15px}
+
+@media(min-width:600px) {
+
+  body {padding:25px 0}
+
+  .app {border:1px solid #20222b;border-radius:24px;padding:0 22px 35px}
+
+  footer {position:relative;margin-top:-90px;background:transparent;border:0}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <header>
+
+    <div class="brand">
+
+      <div class="logo">P</div>
+
+      <div>
+
+        <h1>PLATERUSH</h1>
+
+        <div class="sub">СОБИРАЙ. ОТКРЫВАЙ. КОЛЛЕКЦИОНИРУЙ.</div>
+
+      </div>
+
+    </div>
+
+    <div class="level">✦ УРОВЕНЬ <b id="level">1</b></div>
+
+  </header>
+
+  <section class="stats">
+
+    <div class="stat">
+
+      <div class="label">ИГРОВОЙ БАЛАНС</div>
+
+      <div class="value green" id="balance">5 000 ₽</div>
+
+    </div>
+
+    <div class="stat">
+
+      <div class="label">МОЯ КОЛЛЕКЦИЯ</div>
+
+      <div class="value"><span id="count">0</span> <span class="muted">номеров</span></div>
+
+    </div>
+
+  </section>
+
+  <div class="section-head">
+
+    <h2 id="sectionTitle">Прокрутка номеров</h2>
+
+    <span class="muted" id="sectionMeta">РОССИЯ · RU</span>
+
+  </div>
+
+  <section id="game">
+
+    <div class="hero">
+
+      <div class="eyebrow">✦ ОТКРОЙ СВОЙ НОМЕР ✦</div>
+
+      <div class="plate" id="plate">
+
+        <span class="bolt bolt-left"></span>
+
+        <span class="plate-number" id="plateNumber">А123ВС</span>
+
+        <span class="plate-region">
+
+          <span class="region-code" id="plateCode">77</span>
+
+          <span class="region-country"><span class="rus-flag"></span>RUS</span>
+
+        </span>
+
+        <span class="bolt bolt-right"></span>
+
+      </div>
+
+      <span class="rarity" id="rarity">ОБЫЧНЫЙ</span>
+
+      <div class="result" id="result">Твой следующий номер уже ждёт тебя</div>
+
+      <button class="primary" id="spin">↻ &nbsp; КРУТИТЬ · 250 ₽</button>
+
+      <div class="hint">ДЕМОРЕЖИМ · ИГРОВЫЕ, НЕ РЕАЛЬНЫЕ ДЕНЬГИ</div>
+
+    </div>
+
+  </section>
+
+  <section id="collection" hidden>
+
+    <div class="empty" id="collectionEmpty">Здесь будут храниться твои номера</div>
+
+    <div id="collectionList"></div>
+
+  </section>
+
+  <section id="market" hidden>
+
+    <div class="empty">
+
+      <div style="font-size:27px;margin-bottom:10px">⇄</div>
+
+      <b style="color:#fff">Рынок номеров</b>
+
+      <p>Скоро здесь можно будет выставлять номера на продажу.</p>
+
+      <span>Торговля пока отключена</span>
+
+    </div>
+
+  </section>
+
+  <section id="profile" hidden>
+
+    <div class="profile-card">
+
+      <div class="profile-avatar">◈</div>
+
+      <div class="label">ИГРОК PLATERUSH</div>
+
+      <div class="value">Коллекционер</div>
+
+      <p class="muted">Уровень: <b id="profileLevel">1</b></p>
+
+      <p class="muted">Собрано номеров: <b id="profileCount">0</b></p>
+
+      <p class="muted">Данные пока не сохраняются на сервере.</p>
+
+    </div>
+
+  </section>
+
+  <div class="notice">PLATERUSH · РАННЯЯ ВЕРСИЯ</div>
+
+</div>
+
+<footer>
+
+  <nav class="nav">
+
+    <button class="active" data-page="game"><span>◉</span>Игра</button>
+
+    <button data-page="collection"><span>▤</span>Коллекция</button>
+
+    <button data-page="market"><span>⇄</span>Рынок</button>
+
+    <button data-page="profile"><span>◌</span>Профиль</button>
+
+  </nav>
+
+</footer>
+
+<script>
+
+const COST = 250₽;
+
+let balance = 25000₽;
+
+let plates = [];
+
+let busy = false;
+
+const samples = [
+
+  {n:"А123ВС",region:"77",r:"ОБЫЧНЫЙ",c:"#b9c0cd"},
+
+  {n:"М482ОР",region:"77",r:"ОБЫЧНЫЙ",c:"#b9c0cd"},
+
+  {n:"Е707КХ",region:"777",r:"НЕОБЫЧНЫЙ",c:"#68d5a0"},
+
+  {n:"О777АА",region:"77",r:"РЕДКИЙ",c:"#55a9ff"},
+
+  {n:"А001МР",region:"199",r:"ЭПИЧЕСКИЙ",c:"#b18aff"},
+
+  {n:"М777ММ",region:"777",r:"ЛЕГЕНДАРНЫЙ",c:"#ffd36a"}
+
+];
+
+function choosePlate() {
+
+  const x = Math.random()*100;
+
+  if(x < 1) return samples[5];
+
+  if(x < 3) return samples[4];
+
+  if(x < 10) return samples[3];
+
+  if(x < 30) return samples[2];
+
+  return samples[Math.floor(Math.random()*2)];
+
+}
+
+function renderPlate(p) {
+
+  document.getElementById("plateNumber").textContent = p.n;
+
+  document.getElementById("plateCode").textContent = p.region;
+
+  const rarity = document.getElementById("rarity");
+
+  rarity.textContent = p.r;
+
+  rarity.style.color = p.c;
+
+  rarity.style.borderColor = p.c;
+
+}
+
+function update() {
+
+  document.getElementById("balance").textContent =
+
+    balance.toLocaleString("ru-RU")+" ₽";
+
+  document.getElementById("count").textContent = plates.length;
+
+  document.getElementById("profileCount").textContent = plates.length;
+
+  const level = Math.floor(plates.length/5)+1;
+
+  document.getElementById("level").textContent = level;
+
+  document.getElementById("profileLevel").textContent = level;
+
+  document.getElementById("collectionEmpty").hidden = plates.length>0;
+
+  document.getElementById("collectionList").replaceChildren();
+
+  plates.forEach(p => {
+
+    const card = document.createElement("div");
+
+    card.className = "plate-card";
+
+    const number = document.createElement("div");
+
+    number.className = "mini-plate";
+
+    number.textContent = p.n+" "+p.region;
+
+    const info = document.createElement("div");
+
+    const name = document.createElement("div");
+
+    name.className = "card-name";
+
+    name.textContent = p.r;
+
+    name.style.color = p.c;
+
+    const detail = document.createElement("div");
+
+    detail.className = "card-detail";
+
+    detail.textContent = "Россия · RUS";
+
+    info.append(name,detail);
+
+    card.append(number,info);
+
+    document.getElementById("collectionList").append(card);
+
+  });
+
+}
+
+document.getElementById("spin").addEventListener("click",()=>{
+
+  if(busy) return;
+
+  if(balance<COST) {
+
+    document.getElementById("result").textContent =
+
+      "Недостаточно демобаланса";
+
+    return;
+
+  }
+
+  busy=true;
+
+  balance-=COST;
+
+  update();
+
+  const btn=document.getElementById("spin");
+
+  const plate=document.getElementById("plate");
+
+  btn.disabled=true;
+
+  plate.classList.add("spin");
+
+  document.getElementById("rarity").textContent="ПОИСК НОМЕРА...";
+
+  document.getElementById("result").textContent="Подбираем номер...";
+
+  let ticks=0;
+
+  const timer=setInterval(()=>{
+
+    const p=samples[Math.floor(Math.random()*samples.length)];
+
+    document.getElementById("plateNumber").textContent=p.n;
+
+    document.getElementById("plateCode").textContent=p.region;
+
+    ticks++;
+
+    if(ticks>=18) {
+
+      clearInterval(timer);
+
+      const won=choosePlate();
+
+      renderPlate(won);
+
+      plates.unshift(won);
+
+      document.getElementById("result").textContent =
+
+        "Номер добавлен в демоколлекцию!";
+
+      plate.classList.remove("spin");
+
+      update();
+
+      btn.disabled=false;
+
+      busy=false;
+
+    }
+
+  },100);
+
+});
+
+document.querySelectorAll("[data-page]").forEach(btn=>{
+
+  btn.addEventListener("click",()=>{
+
+    const page=btn.dataset.page;
+
+    ["game","collection","market","profile"].forEach(id=>{
+
+      document.getElementById(id).hidden=id!==page;
+
+    });
+
+    document.querySelectorAll("[data-page]").forEach(b=>
+
+      b.classList.toggle("active",b===btn)
+
+    );
+
+    const titles={
+
+      game:"Прокрутка номеров",
+
+      collection:"Моя коллекция",
+
+      market:"Рынок номеров",
+
+      profile:"Мой профиль"
+
+    };
+
+    document.getElementById("sectionTitle").textContent=titles[page];
+
+    document.getElementById("sectionMeta").textContent =
+
+      page==="game"?"РОССИЯ · RU":"PLATERUSH";
+
+    window.scrollTo({top:0,behavior:"smooth"});
+
+  });
+
+});
+
+update();
+
+</script>
+
+</body>
+
+</html>
